@@ -24,13 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.websystique.springmvc.model.FileBucket;
 import com.websystique.springmvc.model.MultiFileBucket;
 import com.websystique.springmvc.model.WebAPIDTO;
+import com.websystique.springmvc.mongo.MongoDriver;
 import com.websystique.springmvc.util.FileValidator;
 import com.websystique.springmvc.util.MultiFileValidator;
 
 @Controller
 public class FileUploadController {
 
-	private static String UPLOAD_LOCATION="/Users/kevinchen/Desktop/";
+	private static String UPLOAD_LOCATION="C:/Users/Piyush/Desktop/temp/app/";
 	
 	/****************************************************************************
 	 * Project routing section
@@ -54,6 +55,7 @@ public class FileUploadController {
 
 	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
 	public String getHomePage(ModelMap model) {
+		System.out.println("reaching the endpoint");
 		return "welcome";
 	}
 	
@@ -110,16 +112,24 @@ public class FileUploadController {
 			System.out.println("Fetching file");
 			MultipartFile multipartFile = fileBucket.getFile();
 			// Now do something with file...
-			File file = new File("/Users/kevinchen/Desktop/testdownload/"+fileBucket.getFile().getOriginalFilename());
+			File file = new File("C:/Users/Piyush/Desktop/temp/app/"+fileBucket.getFile().getOriginalFilename());
 			multipartFile.transferTo(file);
-			
+			pushFile(file, multipartFile.getContentType());
 			//FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File( UPLOAD_LOCATION + fileBucket.getFile().getOriginalFilename()));
-			System.out.println("the path: "+UPLOAD_LOCATION + fileBucket.getFile().getOriginalFilename());
+			System.out.println("the file name: " + fileBucket.getFile().getOriginalFilename());
 			System.out.println("the size: "+multipartFile.getSize());
 			String fileName = multipartFile.getOriginalFilename();
 			model.addAttribute("fileName", fileName);
 			return "success";
 		}
+	}
+	
+	public void pushFile(File file, String fileType)
+	{
+		MongoDriver driver = new MongoDriver("kevin");
+		System.out.println("File name is : "+ file.getName());
+		driver.insert(fileType, file.getName(), file);
+		driver.disConnect();
 	}
 
 }
