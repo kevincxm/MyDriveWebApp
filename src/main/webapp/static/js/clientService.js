@@ -50,9 +50,9 @@ myapp.controller('loginCtrl', function ($scope, $http, $location) {
 			$scope.url = 'http://localhost:8080/mydrive/api/login/'+email+'/'+pw;
 			$http.get($scope.url)
 			    .success(function (response) {
-			    	if(response.result =='good')
+			    	if(response.statusCode =='200')
 			    	{    		
-			    		window.location.replace("http://localhost:8080/mydrive/upload/");
+			    		window.location.replace("http://localhost:8080/mydrive/");
 		
 			    	}
 			    	});
