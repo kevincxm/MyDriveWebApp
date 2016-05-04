@@ -92,14 +92,12 @@ myapp.service('fileUpload', ['$http', function ($http) {
 }]);
 
 myapp.controller('myCtrl', ['$scope', 'fileUpload', function($scope, fileUpload){
-    $scope.sayHi = function(){
-    	alert("Hey Kevin !!");
-    }
+
     $scope.uploadFile = function(){
         var file = $scope.myFile;
         console.log('file is ' );
         console.dir(file);
-        var uploadUrl = "/mydrive/api/newDocument";
+        var uploadUrl = "/mydrive/singleUpload";
         fileUpload.uploadFileToUrl(file, uploadUrl);
     };
     

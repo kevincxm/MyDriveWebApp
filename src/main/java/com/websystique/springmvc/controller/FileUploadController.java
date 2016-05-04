@@ -61,7 +61,10 @@ public class FileUploadController {
 	public String getLogin(ModelMap model) {
 		return "login";
 	}
-	
+	@RequestMapping(value =  "/upload", method = RequestMethod.GET)
+	public String getUpload(ModelMap model) {
+		return "upload";
+	}
 	@RequestMapping(value = "/singleUpload", method = RequestMethod.GET)
 	public String getSingleUploadPage(ModelMap model) {
 		FileBucket fileModel = new FileBucket();
@@ -99,7 +102,7 @@ public class FileUploadController {
 	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
 	public String singleFileUpload(@Valid FileBucket fileBucket,
 			BindingResult result, ModelMap model) throws IOException {
-
+		System.out.println("reach the singleUpload api");
 		if (result.hasErrors()) {
 			System.out.println("validation errors");
 			return "singleFileUploader";
