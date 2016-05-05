@@ -87,9 +87,12 @@ myapp.service('fileUpload', ['$http', function ($http) {
     }
 }]);
 
-myapp.controller('myCtrl', ['$scope', 'fileUpload', function($scope, fileUpload){
+myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $http, fileUpload){
 	$scope.init = function () {
 	   console.log("Page loaded!!");
+	   $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
+		$http.post($scope.urlGetFileList)
+		    .success(function (response) {$scope.FileList = response;});
 	};
 	
 	
@@ -102,3 +105,14 @@ myapp.controller('myCtrl', ['$scope', 'fileUpload', function($scope, fileUpload)
     };
     
 }]);
+
+
+
+
+
+
+
+
+
+
+

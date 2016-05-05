@@ -102,16 +102,17 @@ body {
 		          <tr class = "event-checkIn-tb-h">
 		            <td><b>Name</b></td>
 		            <td><b>Size</b></td>
-		            <td><b>Modified Date</b></td>
+		            <td><b>Type</b></td>
+		            <td><b>Action</b></td>
 		          </tr>
-		          <tr class="event-checkIn-tb-black" ng-repeat="a in audiencesList | filter:searchText">
-		            <td ng-class="isGrey[a._id]"><p>{{a.displayName}}</p></td>
-		            <td ng-class="isGrey[a._id]"><p>{{a.chineseName}}</p></td>
-		            <td ng-class="isGrey[a._id]"><p>{{a.organization}}</p></td>
+		          <tr class="event-checkIn-tb-black" ng-repeat="a in FileList | filter:searchText">
+		            <td ng-class="isGrey[a._id]"><p>{{a.fileName}}</p></td>
+		            <td ng-class="isGrey[a._id]"><p>{{a.fileSize}}</p></td>
+		            <td ng-class="isGrey[a._id]"><p>{{a.fileType}}</p></td>
 		            <td class = "event-checkIn-tb-td">
 		              <div class="row">
-		                <button type="button" class="btn btn-primary glyphicon glyphicon-ok event-checkIn-btn" ng-model="checkinBtnY" ng-click="highlight(a._id)"></button>
-		                <button type="button" class="btn btn-info glyphicon glyphicon-remove event-checkIn-btn" ng-model="checkinBtnN" ng-click="deHighlight(a._id)"></button>
+		                <button type="button" class="btn btn-primary glyphicon glyphicon-download-alt event-checkIn-btn" ng-model="checkinBtnY" ng-click="highlight(a._id)"></button>
+		                <button type="button" class="btn btn-danger glyphicon glyphicon-remove event-checkIn-btn" ng-model="checkinBtnN" ng-click="deHighlight(a._id)"></button>
 		              </div>
 		            </td>
 		          </tr>
@@ -122,3 +123,5 @@ body {
 	</div>
 </body>
 </html>
+
+

@@ -1,6 +1,7 @@
 package com.websystique.springmvc.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.websystique.springmvc.model.User;
-import com.websystique.springmvc.model.MyDriveFile;
+import com.websystique.springmvc.model.MyDriveFileInfo;
 import com.websystique.springmvc.model.WebAPIDTO;
 
 @RestController
 public class WebServerController {
 
 	private HashMap<String, User> userMap = new HashMap<String, User>();	
-	private HashMap<String, List<MyDriveFile>> fileMap = new HashMap<String, List<MyDriveFile>>();
+	private HashMap<String, ArrayList<MyDriveFileInfo>> fileMap = new HashMap<String, ArrayList<MyDriveFileInfo>>();
 	// TODO: should remove when db is ready
 	public WebServerController(){
 		User kevin = new User("Kevin", "kevin@gmail.com","123");
@@ -25,10 +26,20 @@ public class WebServerController {
 		userMap.put(kevin.getUserEmail(),kevin);
 		userMap.put(piyush.getUserEmail(), piyush);
 		
-		//File file = new File();
+		ArrayList<MyDriveFileInfo> list = new ArrayList<MyDriveFileInfo>();
+		MyDriveFileInfo file = new MyDriveFileInfo("mp1","pdf",1024);
+		list.add(file);
+		MyDriveFileInfo file1 = new MyDriveFileInfo("mp2","txt",8024);
+		list.add(file1);
+		MyDriveFileInfo file2 = new MyDriveFileInfo("music","mp3",1024*6);
+		list.add(file2);
+		MyDriveFileInfo file3 = new MyDriveFileInfo("newspaper","doc",7024);
+		list.add(file3);
+		MyDriveFileInfo file4 = new MyDriveFileInfo("Hero","image",1024*20);
+		list.add(file4);
 		
-		
-		
+		fileMap.put("kevin@gmail.com", list);
+		fileMap.put("piyush@gmail.com", list);	
 	}
 	
 	@RequestMapping(value="/api/login/{email}/{pw}",method = RequestMethod.GET,headers="Accept=application/json")
@@ -46,18 +57,11 @@ public class WebServerController {
 		}
 		return dto;
 	  }
-	/****************************************
-	 * Method that allows user to register 
-	 * @param memberName
-	 * @param memberEmail
-	 * @param memberPassword
-	 * @return WebAPIDTO
-	 * @throws ParseException
-	 ****************************************/
+
 	@RequestMapping(value="/api/createmember/{memberName}/{memberEmail}/{memberPassword}",method = RequestMethod.POST,headers="Accept=application/json")
 	public WebAPIDTO addMember(@PathVariable String memberName,@PathVariable String memberEmail,@PathVariable String memberPassword) throws ParseException 
 	{ 
-
+		System.out.println("reaching addMember API for client :" +memberEmail);
 	  	WebAPIDTO dto = new WebAPIDTO();
 	  	dto.setMethodName("addMember");
 	  	dto.setResult("bad");
@@ -79,5 +83,19 @@ public class WebServerController {
 			}
 		}
 		return dto;
-	  }      	
+	  }      
+	@RequestMapping(value="/api/getFileListById/{memberEmail}/",method = RequestMethod.POST,headers="Accept=application/json")
+	public ArrayList<MyDriveFileInfo> getFileListById(@PathVariable String memberEmail) throws ParseException 
+	{ 
+		System.out.println("reaching getFileListById API for client :" +memberEmail);
+		ArrayList<MyDriveFileInfo> list = new ArrayList<MyDriveFileInfo>();
+		if(fileMap.containsKey(memberEmail)){
+			list = fileMap.get(memberEmail);
+		}
+		return list;
+	}      	
 }
+
+
+
+
