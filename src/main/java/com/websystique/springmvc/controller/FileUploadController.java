@@ -14,6 +14,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -103,9 +104,9 @@ public class FileUploadController {
 		}
 	}
 
-	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
+	@RequestMapping(value = "/singleUpload/{userName}/", method = RequestMethod.POST, headers="Accept=application/json")
 	public String singleFileUpload(@Valid FileBucket fileBucket,
-			BindingResult result, ModelMap model) throws IOException {
+			BindingResult result, ModelMap model, @PathVariable String userName) throws IOException {
 		System.out.println("reach the singleUpload api");
 		if (result.hasErrors()) {
 			System.out.println("validation errors");
@@ -116,10 +117,9 @@ public class FileUploadController {
 			// Now do something with file...
 			File file = new File("C:/Users/Piyush/Desktop/temp/app/"+fileBucket.getFile().getOriginalFilename());
 			multipartFile.transferTo(file);
-			//pushFile(file, multipartFile.getContentType());
-			compressAndPush(file, multipartFile.getContentType());
+			compressAndPush(file, multipartFile.getContentType(), userName);
 			//FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File( UPLOAD_LOCATION + fileBucket.getFile().getOriginalFilename()));
-			System.out.println("the file name: " + fileBucket.getFile().getOriginalFilename());
+			System.out.println("the file name: " + fileBucket.getFile().getOriginalFilename() +" for member email "+ userName);
 			System.out.println("the size: "+multipartFile.getSize());
 			String fileName = multipartFile.getOriginalFilename();
 			model.addAttribute("fileName", fileName);
@@ -127,16 +127,16 @@ public class FileUploadController {
 		}
 	}
 	
-	public void pushFile(MyDriveFile file, String fileType)
+	public void pushFile(MyDriveFile file, String fileType, String name)
 	{
-		MongoDriver driver = new MongoDriver("kevin");
+		MongoDriver driver = new MongoDriver(name);
 		System.out.println("File name is : "+ file.getFileName());
 		//driver.insert(fileType, file.getName(), file);
 		driver.insert(file);
 		driver.disConnect();
 	}
 	
-	public void compressAndPush(File file, String fileType)
+	public void compressAndPush(File file, String fileType, String userName)
 	{
 		System.out.println("File compressed is "+file.getAbsolutePath()+".zip");
 		CompressionFactory cFactory = new CompressionFactory();
@@ -146,7 +146,7 @@ public class FileUploadController {
 											fileType, 
 											file.length(),
 											compressedfile.length());
-		pushFile(mdFile, fileType);
+		pushFile(mdFile, fileType, userName);
 	}
 
 }

@@ -90,7 +90,8 @@ myapp.service('fileUpload', ['$http', function ($http) {
 myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $http, fileUpload){
 	$scope.init = function () {
 	   console.log("Page loaded!!");
-	   $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
+	   //$scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
+	   $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/xiaoming/";
 		$http.post($scope.urlGetFileList)
 		    .success(function (response) {$scope.FileList = response;});
 	};
@@ -107,8 +108,9 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
         var file = $scope.myFile;
         console.log('file is ' );
         console.dir(file);
-        var uploadUrl = "/mydrive/singleUpload";
+        var uploadUrl = "/mydrive/singleUpload/xiaoming/";
         fileUpload.uploadFileToUrl(file, uploadUrl);
+        window.location.reload();
     };
     
 }]);

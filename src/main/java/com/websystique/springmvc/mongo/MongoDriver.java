@@ -11,6 +11,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.ServerAddress;
 import com.mongodb.gridfs.*;
 import com.websystique.springmvc.model.MyDriveFile;
+import com.websystique.springmvc.model.MyDriveFileInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,19 +139,31 @@ public class MongoDriver {
         gridFSInsert(file.getFile());
 	}
 	
-	public void search(String collectionName)
+	public ArrayList<MyDriveFileInfo> search(String collectionName)
 	{
 		DBCollection coll = this.db.getCollection(collectionName/*"players"*/);
         System.out.println("Collection "+ collectionName +" selected successfully");
         
         DBCursor cursor = coll.find();
         int i = 1;
-			
+		ArrayList<MyDriveFileInfo> mdInfoList = new ArrayList<MyDriveFileInfo>();
         while (cursor.hasNext()) { 
            System.out.println("Document: "+i); 
-           System.out.println(cursor.next()); 
+           BasicDBObject obj = (BasicDBObject) cursor.next();
+           MyDriveFileInfo mdInfo = new MyDriveFileInfo();
+           
+           try{ mdInfo.setFileName(obj.getString("fileName"));} catch(NullPointerException nle){}
+           try{ mdInfo.setFileType(obj.getString("type"));} catch(NullPointerException nle){}
+           try{ mdInfo.setFileSize(obj.getLong("orgSize"));} catch(NullPointerException nle){}
+           try{ mdInfo.setCompressedFileSize(obj.getLong("compressedSize"));} catch(NullPointerException nle){}
+           try{ mdInfo.setCreatedDate(obj.getDate("createdDate"));} catch(NullPointerException nle){}
+           
+           mdInfoList.add(mdInfo);
+           System.out.println(obj); 
            i++;
         }
+        
+        return mdInfoList;
 	}
 	
 	public void gridFSInsert(String fullFilePath, String fileName) throws IOException

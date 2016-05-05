@@ -4,17 +4,35 @@ import java.util.Date;
 
 public class MyDriveFileInfo {
 	
-	public MyDriveFileInfo(String name, String type, int size){
+	public MyDriveFileInfo(){
+		this.FileName = "";
+		this.FileType = "";
+		this.FileSize = 0l;
+		this.compressedFileSize = 0l;
+		this.createdDate = null;
+	}
+	
+	public MyDriveFileInfo(String name, String type, long orgfileSize, long compressedFileSize, Date date){
 		this.FileName = name;
 		this.FileType = type;
-		this.FileSize = size;
+		this.FileSize = orgfileSize;
+		this.compressedFileSize = compressedFileSize;
+		this.createdDate = date;
+	}
+	
+	// for testing only
+	public MyDriveFileInfo(String name, String type, long orgfileSize){
+		this.FileName = name;
+		this.FileType = type;
+		this.FileSize = orgfileSize;
 	}
 	
 	private String FileName;
 	private String FileType;
-	private int FileSize;
-	private Date modifiedDate;
+	private long FileSize;
+	private long compressedFileSize;
 	private Date createdDate;
+	
 	public String getFileName() {
 		return FileName;
 	}
@@ -27,23 +45,23 @@ public class MyDriveFileInfo {
 	public void setFileType(String fileType) {
 		FileType = fileType;
 	}
-	public int getFileSize() {
+	public long getFileSize() {
 		return FileSize;
 	}
-	public void setFileSize(int fileSize) {
+	public void setFileSize(long fileSize) {
 		FileSize = fileSize;
-	}
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	public long getCompressedFileSize() {
+		return compressedFileSize;
+	}
+	public void setCompressedFileSize(long compressedFileSize) {
+		this.compressedFileSize = compressedFileSize;
 	}
 	
 	
