@@ -41,8 +41,9 @@ body {
 	width: 100%;
 	background-color:#286090;
 }
-.row{
-	margin-top:20px;
+
+.event-checkIn-tb-h{
+	background-color:#fff;
 }
 </style>
 
@@ -95,6 +96,7 @@ body {
 		    </div>
 		  </div>
 		
+		  <br/>
 		  <div class="row">
 		    <div class="col-sm-12 col-md-10 col-md-push-1 text-center">
 		     
@@ -106,13 +108,13 @@ body {
 		            <td><b>Action</b></td>
 		          </tr>
 		          <tr class="event-checkIn-tb-black" ng-repeat="a in FileList | filter:searchText">
-		            <td ng-class="isGrey[a._id]"><p>{{a.fileName}}</p></td>
-		            <td ng-class="isGrey[a._id]"><p>{{a.fileSize}}</p></td>
-		            <td ng-class="isGrey[a._id]"><p>{{a.fileType}}</p></td>
+		            <td><i class="glyphicon glyphicon-file" style="color:#337AB7;"><p>{{a.fileName}}</p></td>
+		            <td><p>{{a.fileSize}}</p></td>
+		            <td><p>{{a.fileType}}</p></td>
 		            <td class = "event-checkIn-tb-td">
 		              <div class="row">
-		                <button type="button" class="btn btn-primary glyphicon glyphicon-download-alt event-checkIn-btn" ng-model="checkinBtnY" ng-click="highlight(a._id)"></button>
-		                <button type="button" class="btn btn-danger glyphicon glyphicon-remove event-checkIn-btn" ng-model="checkinBtnN" ng-click="deHighlight(a._id)"></button>
+		                <button type="button" class="btn btn-primary glyphicon glyphicon-download-alt" ng-model="checkinBtnY" ng-click="download(a)"></button>
+		                <button type="button" class="btn btn-danger glyphicon glyphicon-remove" ng-model="checkinBtnN" ng-click="deleteFile(a)"></button>
 		              </div>
 		            </td>
 		          </tr>

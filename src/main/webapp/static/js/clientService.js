@@ -95,6 +95,13 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
 		    .success(function (response) {$scope.FileList = response;});
 	};
 	
+	$scope.download = function (file) {
+	     console.log("download the file:"+file.fileName);
+	};
+	
+	$scope.deleteFile = function(file){
+		console.log("delete the file:"+file.fileName);
+	}
 	
     $scope.uploadFile = function(){
         var file = $scope.myFile;
