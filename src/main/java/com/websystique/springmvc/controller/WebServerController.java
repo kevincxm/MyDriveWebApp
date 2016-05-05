@@ -2,6 +2,7 @@ package com.websystique.springmvc.controller;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,19 +10,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.websystique.springmvc.model.User;
+import com.websystique.springmvc.model.MyDriveFile;
 import com.websystique.springmvc.model.WebAPIDTO;
 
 @RestController
 public class WebServerController {
 
 	private HashMap<String, User> userMap = new HashMap<String, User>();	
+	private HashMap<String, List<MyDriveFile>> fileMap = new HashMap<String, List<MyDriveFile>>();
 	// TODO: should remove when db is ready
 	public WebServerController(){
 		User kevin = new User("Kevin", "kevin@gmail.com","123");
 		User piyush = new User("Piyush", "piyush@gmail.com","123");
-		
 		userMap.put(kevin.getUserEmail(),kevin);
 		userMap.put(piyush.getUserEmail(), piyush);
+		
+		//File file = new File();
+		
+		
 		
 	}
 	

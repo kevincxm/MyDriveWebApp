@@ -88,7 +88,11 @@ myapp.service('fileUpload', ['$http', function ($http) {
 }]);
 
 myapp.controller('myCtrl', ['$scope', 'fileUpload', function($scope, fileUpload){
-
+	$scope.init = function () {
+	   console.log("Page loaded!!");
+	};
+	
+	
     $scope.uploadFile = function(){
         var file = $scope.myFile;
         console.log('file is ' );

@@ -2,9 +2,9 @@ package com.websystique.springmvc.model;
 
 import java.util.Date;
 
-public class File {
+public class MyDriveFile {
 	
-	public File(String name, String type, int size){
+	public MyDriveFile(String name, String type, int size){
 		this.FileName = name;
 		this.FileType = type;
 		this.FileSize = size;

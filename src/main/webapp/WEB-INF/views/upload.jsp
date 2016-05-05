@@ -41,6 +41,9 @@ body {
 	width: 100%;
 	background-color:#286090;
 }
+.row{
+	margin-top:20px;
+}
 </style>
 
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
@@ -50,7 +53,7 @@ body {
     <script src="${clientServiceJs}"></script>
 
 </head>
-<body ng-controller="myCtrl" >
+<body ng-controller="myCtrl" data-ng-init="init()" >
 
 	<!-- Navigation -->
 	<nav class="navbar navbar-default navbar-fixed-top">
@@ -84,6 +87,38 @@ body {
 		    <input type="file" file-model="myFile"/>
 		    <button ng-click="uploadFile()">upload me</button>
 		</div>
+		
+		  <div class="row">
+		    <div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
+		      <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-search"></i></span>
+		      <input type="text" class="form-control" placeholder="Search keyword here" ng-model="searchText">
+		    </div>
+		  </div>
+		
+		  <div class="row">
+		    <div class="col-sm-12 col-md-10 col-md-push-1 text-center">
+		     
+		        <table class="table">
+		          <tr class = "event-checkIn-tb-h">
+		            <td><b>Name</b></td>
+		            <td><b>Size</b></td>
+		            <td><b>Modified Date</b></td>
+		          </tr>
+		          <tr class="event-checkIn-tb-black" ng-repeat="a in audiencesList | filter:searchText">
+		            <td ng-class="isGrey[a._id]"><p>{{a.displayName}}</p></td>
+		            <td ng-class="isGrey[a._id]"><p>{{a.chineseName}}</p></td>
+		            <td ng-class="isGrey[a._id]"><p>{{a.organization}}</p></td>
+		            <td class = "event-checkIn-tb-td">
+		              <div class="row">
+		                <button type="button" class="btn btn-primary glyphicon glyphicon-ok event-checkIn-btn" ng-model="checkinBtnY" ng-click="highlight(a._id)"></button>
+		                <button type="button" class="btn btn-info glyphicon glyphicon-remove event-checkIn-btn" ng-model="checkinBtnN" ng-click="deHighlight(a._id)"></button>
+		              </div>
+		            </td>
+		          </tr>
+		        </table>
+		
+		    </div>
+		  </div>
 	</div>
 </body>
 </html>
