@@ -33,13 +33,9 @@ myapp.controller('SignupCtrl', function ($scope, $http) {
 
 myapp.controller('loginCtrl', function ($scope, $http, $location) {
 	
-	$scope.inputName = null;
-	$scope.inputPW = null;
-	$scope.password ='123';
-	$scope.url ="";
-	$scope.sayHi = function(){
-    	alert("Hey there!!");
-    }
+	$scope.redirectToRegister=function(){
+		window.location.replace("http://localhost:8080/mydrive/signup");
+	}
 	$scope.checkCredential = function(email, pw){
 		if(email == null || pw == null )
 		{

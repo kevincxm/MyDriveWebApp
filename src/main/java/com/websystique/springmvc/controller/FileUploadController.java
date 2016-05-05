@@ -63,6 +63,10 @@ public class FileUploadController {
 	public String getLogin(ModelMap model) {
 		return "login";
 	}
+	@RequestMapping(value =  "/signup", method = RequestMethod.GET)
+	public String getSignup(ModelMap model) {
+		return "signup";
+	}
 	@RequestMapping(value =  "/upload", method = RequestMethod.GET)
 	public String getUpload(ModelMap model) {
 		return "upload";

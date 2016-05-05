@@ -50,7 +50,7 @@ body {
     <script src="${clientServiceJs}"></script>
 
 </head>
-<body ng-controller="loginCtrl" >
+<body ng-controller="SignupCtrl" >
 
 	<!-- Navigation -->
 	<nav class="navbar navbar-default navbar-fixed-top">
@@ -80,24 +80,24 @@ body {
 	</nav>
 
 	<div class="container-fluid">
-
 		<form class="form-signin">
-			<h2 class="form-signin-heading">Member Login</h2>
-			<label for="inputEmail" class="sr-only">Email address</label>
-			<input type="email" id="inputEmail" class="form-control" ng-model="inputName" placeholder="Email address" required="" autofocus="">
+			<h2 class="form-signin-heading">Member SignUp</h2>
+			<br/>
+			<label for="InputName"  class="sr-only">Enter Name</label>	
+			<input type="text" class="form-control" ng-model = "inputName" name="InputName" id="InputName" placeholder="Enter Name" required>
 			<br />
-			<label for="inputPassword" class="sr-only">Password</label>
-			<input type="password" id="inputPassword"  class="form-control" ng-model="inputPW" placeholder="Password" required="">
-			<a href="#"> Forget username/ password</a>
-			<div class="checkbox">
-				<label> <input type="checkbox" value="remember-me">
-					Remember me
-				</label><a href="" ng-click="redirectToRegister()">  Register </a>
-			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click= "checkCredential(inputName, inputPW)">Sign
-				in</button>
+			<label for="InputEmail"  class="sr-only">Enter Email</label>
+			<input type="email" class="form-control" ng-model = "inputEmail" id="InputEmail" name="InputEmail" placeholder="Enter Email" required>
+			<br />
+			<label for="InputEmail"  class="sr-only">Enter Password</label>
+			<input type="password" class="form-control" ng-model = "inputPW" id="InputPasswordFirst" name="InputPassword" placeholder="Enter Password" required>
+			<br />
+			<label for="InputEmail"  class="sr-only">Confirm Password</label>	
+			<input type="password" class="form-control" ng-model = "inputPWC" id="InputPasswordSecond" name="InputPassword" placeholder="Confirm Password" required>
+			<br />
+			<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click = "checkAndSignup(inputName, inputEmail, inputPW, inputPWC)">Submit</button>
 		</form>
-
+		
 	</div>
 </body>
 </html>
