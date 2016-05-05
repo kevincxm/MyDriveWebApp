@@ -3,20 +3,17 @@ package com.websystique.springmvc.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.websystique.springmvc.compression.CompressionFactory;
 import com.websystique.springmvc.model.FileBucket;
 import com.websystique.springmvc.model.MultiFileBucket;
-import com.websystique.springmvc.model.WebAPIDTO;
+import com.websystique.springmvc.model.MyDriveFile;
 import com.websystique.springmvc.mongo.MongoDriver;
 import com.websystique.springmvc.util.FileValidator;
 import com.websystique.springmvc.util.MultiFileValidator;
@@ -130,11 +127,12 @@ public class FileUploadController {
 		}
 	}
 	
-	public void pushFile(File file, String fileType)
+	public void pushFile(MyDriveFile file, String fileType)
 	{
 		MongoDriver driver = new MongoDriver("kevin");
-		System.out.println("File name is : "+ file.getName());
-		driver.insert(fileType, file.getName(), file);
+		System.out.println("File name is : "+ file.getFileName());
+		//driver.insert(fileType, file.getName(), file);
+		driver.insert(file);
 		driver.disConnect();
 	}
 	
@@ -144,7 +142,11 @@ public class FileUploadController {
 		CompressionFactory cFactory = new CompressionFactory();
 		cFactory.compressUsingGzip(file.getAbsolutePath());
 		File compressedfile = new File(file.getAbsoluteFile()+".zip");
-		pushFile(compressedfile, fileType);
+		MyDriveFile mdFile = new MyDriveFile(compressedfile, file.getName(),
+											fileType, 
+											file.length(),
+											compressedfile.length());
+		pushFile(mdFile, fileType);
 	}
 
 }

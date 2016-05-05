@@ -1,20 +1,26 @@
 package com.websystique.springmvc.model;
 
+import java.io.File;
 import java.util.Date;
 
-public class MyDriveFile {
+public class MyDriveFile{
 	
-	public MyDriveFile(String name, String type, int size){
+	public MyDriveFile(File file, String name, String type, long orgSize, long compressedSize){
+		this.file = file;
 		this.FileName = name;
 		this.FileType = type;
-		this.FileSize = size;
+		this.FileSize = orgSize;
+		this.compressedFileSize = compressedSize;
+		this.createdDate = new Date();
 	}
 	
 	private String FileName;
 	private String FileType;
-	private int FileSize;
-	private Date modifiedDate;
+	private long FileSize;
 	private Date createdDate;
+	private File file;
+	private long compressedFileSize;
+	
 	public String getFileName() {
 		return FileName;
 	}
@@ -27,23 +33,29 @@ public class MyDriveFile {
 	public void setFileType(String fileType) {
 		FileType = fileType;
 	}
-	public int getFileSize() {
+	public long getFileSize() {
 		return FileSize;
 	}
-	public void setFileSize(int fileSize) {
+	public void setFileSize(long fileSize) {
 		FileSize = fileSize;
-	}
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	public File getFile() {
+		return file;
+	}
+	public void setFile(File file) {
+		this.file = file;
+	}
+	public long getCompressedFileSize() {
+		return compressedFileSize;
+	}
+	public void setCompressedFileSize(long compressedFileSize) {
+		this.compressedFileSize = compressedFileSize;
 	}
 	
 	

@@ -10,6 +10,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.ServerAddress;
 import com.mongodb.gridfs.*;
+import com.websystique.springmvc.model.MyDriveFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -121,6 +122,20 @@ public class MongoDriver {
         doc.append("fileName", fileName);
         coll.insert(doc);
         gridFSInsert(file);
+	}
+	
+	public void insert(MyDriveFile file)
+	{
+		// Insert logic
+        BasicDBObject doc = new BasicDBObject();
+		DBCollection coll = this.db.getCollection("fileDtls");
+		doc.append("fileName", file.getFileName());
+        doc.append("type", file.getFileType());
+        doc.append("orgSize", file.getFileSize());
+        doc.append("compressedSize", file.getCompressedFileSize());
+        doc.append("createdDate", file.getCreatedDate());
+        coll.insert(doc);
+        gridFSInsert(file.getFile());
 	}
 	
 	public void search(String collectionName)
