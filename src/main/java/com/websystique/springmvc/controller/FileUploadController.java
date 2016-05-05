@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.websystique.springmvc.compression.CompressionFactory;
 import com.websystique.springmvc.model.FileBucket;
 import com.websystique.springmvc.model.MultiFileBucket;
 import com.websystique.springmvc.model.WebAPIDTO;
@@ -118,7 +119,8 @@ public class FileUploadController {
 			// Now do something with file...
 			File file = new File("C:/Users/Piyush/Desktop/temp/app/"+fileBucket.getFile().getOriginalFilename());
 			multipartFile.transferTo(file);
-			pushFile(file, multipartFile.getContentType());
+			//pushFile(file, multipartFile.getContentType());
+			compressAndPush(file, multipartFile.getContentType());
 			//FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File( UPLOAD_LOCATION + fileBucket.getFile().getOriginalFilename()));
 			System.out.println("the file name: " + fileBucket.getFile().getOriginalFilename());
 			System.out.println("the size: "+multipartFile.getSize());
@@ -134,6 +136,15 @@ public class FileUploadController {
 		System.out.println("File name is : "+ file.getName());
 		driver.insert(fileType, file.getName(), file);
 		driver.disConnect();
+	}
+	
+	public void compressAndPush(File file, String fileType)
+	{
+		System.out.println("File compressed is "+file.getAbsolutePath()+".zip");
+		CompressionFactory cFactory = new CompressionFactory();
+		cFactory.compressUsingGzip(file.getAbsolutePath());
+		File compressedfile = new File(file.getAbsoluteFile()+".zip");
+		pushFile(compressedfile, fileType);
 	}
 
 }
