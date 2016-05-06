@@ -133,9 +133,10 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
 	
     $scope.uploadFile = function(){
         var file = $scope.myFile;
+        var userName = $scope.userName;
         console.log('file is ' );
         console.dir(file);
-        var uploadUrl = "/mydrive/singleUpload/xiaoming/";
+        var uploadUrl = "/mydrive/singleUpload/"+userName+"/";
         fileUpload.uploadFileToUrl(file, uploadUrl);
         window.location.reload();
     };
