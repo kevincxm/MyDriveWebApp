@@ -41,6 +41,9 @@ body {
 	width: 100%;
 	background-color:#286090;
 }
+.loginWarning{
+	color: red;
+}
 </style>
 
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
@@ -84,10 +87,11 @@ body {
 		<form class="form-signin">
 			<h2 class="form-signin-heading">Member Login</h2>
 			<label for="inputEmail" class="sr-only">Email address</label>
-			<input type="email" id="inputEmail" class="form-control" ng-model="inputName" placeholder="Email address" required="" autofocus="">
+			<input type=text id="inputEmail" class="form-control" ng-model="inputName" placeholder="Email address" required="" autofocus="">
 			<br />
 			<label for="inputPassword" class="sr-only">Password</label>
 			<input type="password" id="inputPassword"  class="form-control" ng-model="inputPW" placeholder="Password" required="">
+			<label ng-show="warningEnabled" class = "loginWarning"> The username/password doesn't match</label>
 			<a href="#"> Forget username/ password</a>
 			<div class="checkbox">
 				<label> <input type="checkbox" value="remember-me">

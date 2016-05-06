@@ -19,6 +19,7 @@ myapp.controller('SignupCtrl', function ($scope, $http) {
 					.success(function (response) {
 				    	if(response.result =='good')
 				    	{
+				    		sessionStorage.user = JSON.stringify(name);
 				    		window.location.replace("http://localhost:8080/mydrive/upload/");
 				    	}
 				    	});
@@ -31,26 +32,29 @@ myapp.controller('SignupCtrl', function ($scope, $http) {
 
 
 
-myapp.controller('loginCtrl', function ($scope, $http, $location, userLogin) {
-
+myapp.controller('loginCtrl', function ($scope, $http, $location) {
+	$scope.warningEnabled = false;
+	sessionStorage.user = JSON.stringify("Default");
 	$scope.redirectToRegister=function(){
 		window.location.replace("http://localhost:8080/mydrive/signup");
 	}
-	$scope.checkCredential = function(email, pw){
-		if(email == null || pw == null )
+	$scope.checkCredential = function(name, pw){
+		if(name == null || pw == null )
 		{
-			alert("Insufficient Data! ");
+			$scope.warningEnabled = true;
 		}
 		else
 		{
-			$scope.url = 'http://localhost:8080/mydrive/api/login/'+email+'/'+pw;
+			$scope.url = 'http://localhost:8080/mydrive/api/login/'+name+'/'+pw;
 			$http.get($scope.url)
 			    .success(function (response) {
 			    	if(response.statusCode =='200')
 			    	{ 
-			    		$scope.someOne = email;
-			    		userLogin.updateUser(email);    		
+			    		sessionStorage.user = JSON.stringify(name);	
 			    		window.location.replace("http://localhost:8080/mydrive/upload");	    		
+			    	}
+			    	else{
+			    		$scope.warningEnabled = true;
 			    	}
 			    	});
 		}
@@ -89,16 +93,23 @@ myapp.service('fileUpload', ['$http', function ($http) {
 }]);
 
 
-myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $http, fileUpload, userLogin){
+myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $http, fileUpload){
 	$scope.init = function () {
 	   console.log("Page loaded!!");
-	   //var name = userLogin.getUser();
-	   //console.log('userName:'+name);
+	  $scope.userName = JSON.parse(sessionStorage.user);
+	  if( $scope.userName ==='Default'){
+		  window.location.replace("http://localhost:8080/mydrive/login");
+	  }
 	  //$scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
-	   $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/xiaoming/";
+	   $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/"+$scope.userName+"/";
 		$http.post($scope.urlGetFileList)
 		    .success(function (response) {$scope.FileList = response;});
 	};
+	$scope.signOut = function(){
+		sessionStorage.user = JSON.stringify("Default");
+		window.location.replace("http://localhost:8080/mydrive/login");
+	};
+	
 	
 	$scope.download = function (file) {
 	     console.log("download the file:"+file.fileName);
@@ -108,8 +119,7 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
 	
 	$scope.deleteFile = function(file){
 		console.log("delete the file:"+file.fileName);
-		//var userName = "kevin@gmail.com";
-		var userName = "xiaoming";
+		var userName = $scope.userName;
 		var fileName = file.fileName;
 		$scope.url = 'http://localhost:8080/mydrive/api/deleteFile/'+userName+'/'+fileName+'/';
 		$http.post($scope.url)
@@ -131,26 +141,6 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
     };
     
 }]);
-
-
-// create a server to share the userName between controller
-myapp.service('userLogin', function() {
-	  var userLogin = '';
-
-	  var updateUser = function(newObj) {
-		  userLogin = newObj;
-	  };
-
-	  var getUser = function(){
-	      return userLogin;
-	  };
-
-	  return {
-		  getUser: getUser,
-		  updateUser: updateUser
-	  };
-
-	});
 
 
 
