@@ -33,7 +33,7 @@ body {
 }
 .container-fluid {
 	height: auto;
-	padding-top: 100px;
+	padding-top: 50px;
 	padding-bottom: 600px;
 	background-color:#EBEDEF;
 }
@@ -75,8 +75,8 @@ body {
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="hidden active"><a href=""></a></li>
-					<li class="page-scroll"><a href="" style="color:#fff;">About</a></li>
-					<li class="page-scroll"><a href="" style="color:#fff;">Contact</a></li>
+					<li class="page-scroll"><a href="" style="color:#fff;">Hi {{userName}}</a></li>
+					<li class="page-scroll"><a href="" ng-click="signOut()" style="color:#fff;">Sign Out</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -84,10 +84,22 @@ body {
 	</nav>
 
 	<div class="container-fluid">
-		<div >
-		    <input type="file" file-model="myFile"/>
-		    <button ng-click="uploadFile()">upload me</button>
+
+		<div class="row">
+		    <div class="col-sm-10 col-md-8 col-md-push-2 col-sm-push-1 text-center"style="background-color:#fff; height: 150px; ">
+		    	<div class="btn-group">
+			        <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'mongoDB'">Mongo</label>
+			        <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'SFS'">MDFS</label>
+		        </div>
+		    </div>
 		</div>
+		</br>
+		 <div class="row">
+		 <div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
+		    <input class="btn btn-primary col-sm-6" type="file" file-model="myFile"/>
+		    <button class="btn btn-primary glyphicon glyphicon-cloud-upload col-sm-2 col-sm-offset-2" ng-click="uploadFile()"></button>
+		</div>
+		</br>
 		
 		  <div class="row">
 		    <div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
