@@ -113,6 +113,22 @@ public class WebServerController {
 		return list;
 	}   
 	
+	@RequestMapping(value="/api/deleteFile/{userName}/{fileName}/",method = RequestMethod.POST,headers="Accept=application/json")
+	public WebAPIDTO deleteFileByName(@PathVariable String userName, @PathVariable String fileName) throws ParseException 
+	{ 
+		System.out.println("reaching deleteFileByName API for client :" +userName +"and try to delete the file: "+ fileName);
+		WebAPIDTO dto = new WebAPIDTO();
+		dto.setMethodName("deleteFile");
+		dto.setResult("bad");
+		//dto.setStatusCode("400");
+		//For piyshu, add the db logic here, if success, use following two lines.
+		//dto.setResult("good");
+		dto.setStatusCode("200");
+		
+		return dto;
+	}
+	
+	
 	public ArrayList<MyDriveFileInfo> getAllFiles(String userName)
 	{
 		MongoDriver driver = new MongoDriver(userName);

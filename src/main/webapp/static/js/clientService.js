@@ -31,8 +31,8 @@ myapp.controller('SignupCtrl', function ($scope, $http) {
 
 
 
-myapp.controller('loginCtrl', function ($scope, $http, $location) {
-	
+myapp.controller('loginCtrl', function ($scope, $http, $location, userLogin) {
+
 	$scope.redirectToRegister=function(){
 		window.location.replace("http://localhost:8080/mydrive/signup");
 	}
@@ -47,9 +47,10 @@ myapp.controller('loginCtrl', function ($scope, $http, $location) {
 			$http.get($scope.url)
 			    .success(function (response) {
 			    	if(response.statusCode =='200')
-			    	{    		
-			    		window.location.replace("http://localhost:8080/mydrive/");
-		
+			    	{ 
+			    		$scope.someOne = email;
+			    		userLogin.updateUser(email);    		
+			    		window.location.replace("http://localhost:8080/mydrive/upload");	    		
 			    	}
 			    	});
 		}
@@ -87,11 +88,14 @@ myapp.service('fileUpload', ['$http', function ($http) {
     }
 }]);
 
-myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $http, fileUpload){
+
+myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $http, fileUpload, userLogin){
 	$scope.init = function () {
 	   console.log("Page loaded!!");
-	   //$scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
-	   $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/xiaoming/";
+	   //var name = userLogin.getUser();
+	   //console.log('userName:'+name);
+	  $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
+	   //$scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/xiaoming/";
 		$http.post($scope.urlGetFileList)
 		    .success(function (response) {$scope.FileList = response;});
 	};
@@ -102,6 +106,17 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
 	
 	$scope.deleteFile = function(file){
 		console.log("delete the file:"+file.fileName);
+		//var userName = "kevin@gmail.com";
+		var userName = "xiaoming";
+		var fileName = file.fileName;
+		$scope.url = 'http://localhost:8080/mydrive/api/deleteFile/'+userName+'/'+fileName+'/';
+		$http.post($scope.url)
+		    .success(function (response) {
+		    	if(response.statusCode =='200')
+		    	{ 		
+		    		window.location.replace("http://localhost:8080/mydrive/upload");	    		
+		    	}
+		    	});
 	}
 	
     $scope.uploadFile = function(){
@@ -116,12 +131,24 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
 }]);
 
 
+// create a server to share the userName between controller
+myapp.service('userLogin', function() {
+	  var userLogin = '';
 
+	  var updateUser = function(newObj) {
+		  userLogin = newObj;
+	  };
 
+	  var getUser = function(){
+	      return userLogin;
+	  };
 
+	  return {
+		  getUser: getUser,
+		  updateUser: updateUser
+	  };
 
-
-
+	});
 
 
 
