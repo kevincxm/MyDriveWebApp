@@ -3,13 +3,16 @@ package com.websystique.springmvc.controller;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -25,18 +28,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.websystique.springmvc.compression.CompressionFactory;
 import com.websystique.springmvc.model.FileBucket;
 import com.websystique.springmvc.model.MultiFileBucket;
-import com.websystique.springmvc.model.MyDriveFile;
-import com.websystique.springmvc.storage.mongo.MongoDriver;
+import com.websystique.springmvc.storage.DBHandler;
+import com.websystique.springmvc.storage.FSHandler;
+import com.websystique.springmvc.storage.StorageManager;
 import com.websystique.springmvc.util.FileValidator;
 import com.websystique.springmvc.util.MultiFileValidator;
 
 @Controller
 public class FileUploadController {
-
+	private static boolean dbON = false;
+	public FileUploadController(){
+		loadSystemProperties();
+	}
+	DBHandler dbHandler = null;
+	FSHandler fsHandler = null;
 	private static String UPLOAD_LOCATION="C:/Users/Piyush/Desktop/temp/app/";
 	//private static String UPLOAD_LOCATION="/Users/kevinchen/Desktop/testdownload/";
 	/****************************************************************************
@@ -134,26 +141,21 @@ public class FileUploadController {
 		}
 	}
 	
-	public void pushFile(MyDriveFile file, String fileType, String name)
-	{
-		MongoDriver driver = new MongoDriver(name);
-		System.out.println("File name is : "+ file.getFileName());
-		//driver.insert(fileType, file.getName(), file);
-		driver.insert(file);
-		driver.disConnect();
-	}
-	
 	public void compressAndPush(File file, String fileType, String userName)
 	{
 		System.out.println("File compressed is "+file.getAbsolutePath()+".zip");
-		CompressionFactory cFactory = new CompressionFactory();
-		cFactory.compressUsingGzip(file.getAbsolutePath());
-		File compressedfile = new File(file.getAbsoluteFile()+".zip");
-		MyDriveFile mdFile = new MyDriveFile(compressedfile, file.getName(),
-											fileType, 
-											file.length(),
-											compressedfile.length());
-		pushFile(mdFile, fileType, userName);
+		StorageManager sm = new StorageManager(dbON, userName, UPLOAD_LOCATION);
+
+		if(dbON)
+		{
+			dbHandler = sm.getDBHandler();
+			dbHandler.compressAndPush(file, fileType, userName);
+		}
+		else
+		{
+			fsHandler = sm.getFSHandler();
+			fsHandler.compressAndPush(file, fileType, userName);
+		}
 	}
 	
 	
@@ -198,5 +200,54 @@ public class FileUploadController {
         //Copy bytes from source to destination(outputstream in this example), closes both streams.
         FileCopyUtils.copy(inputStream, response.getOutputStream());
     }
+    
+    private boolean loadSystemProperties() 
+	{
+		boolean flag = false;
+		try 
+		{
+			File file = new File("properties/system.properties");
+			System.out.println(file.getAbsolutePath());
+			FileInputStream fis = new FileInputStream(file);
+			Properties properties = new Properties();
+			properties.load(fis);
+			fis.close();
+			Enumeration<Object> keys = properties.keys();
+			while(keys.hasMoreElements())
+			{
+				String key = (String) keys.nextElement();
+				String val = properties.getProperty(key);
+				if(key.equals("localFilePath"))
+					UPLOAD_LOCATION = val;
+				else if(key.equals("db"))
+				{
+					if(val.equalsIgnoreCase("ON"))
+						dbON = true;
+				}
+			}
+			if(UPLOAD_LOCATION==null || UPLOAD_LOCATION.equals(""))
+			{
+				System.out.println("System properties missing! Check configurations!!");
+				//_logger.error("System properties missing! Check configurations!!");
+				flag = false;
+			}
+			else
+			{
+				//checkAndCreateDirectory();
+				flag = true;
+			}
+		} 
+		catch (FileNotFoundException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+		return flag;
+		
+	}
 
 }

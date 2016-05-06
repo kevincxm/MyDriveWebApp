@@ -21,6 +21,11 @@ public class MyDriveFSManager {
 		node = new Node("xiaoming");
 	}
 	
+	public MyDriveFSManager(String user)
+	{
+		node = new Node(user);
+	}
+	
 	public static void main(String[] args) 
 	{
 		node = new Node("xiaoming");

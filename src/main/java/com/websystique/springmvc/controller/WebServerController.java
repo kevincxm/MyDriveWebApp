@@ -1,10 +1,15 @@
 package com.websystique.springmvc.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +20,9 @@ import com.websystique.springmvc.model.MyDriveFile;
 import com.websystique.springmvc.model.User;
 import com.websystique.springmvc.model.MyDriveFileInfo;
 import com.websystique.springmvc.model.WebAPIDTO;
+import com.websystique.springmvc.storage.DBHandler;
+import com.websystique.springmvc.storage.FSHandler;
+import com.websystique.springmvc.storage.StorageManager;
 import com.websystique.springmvc.storage.mongo.MongoDriver;
 
 @RestController
@@ -22,12 +30,14 @@ public class WebServerController {
 
 	private HashMap<String, User> userMap = new HashMap<String, User>();
 	private HashMap<String, ArrayList<MyDriveFileInfo>> fileMap = new HashMap<String, ArrayList<MyDriveFileInfo>>();
-	private static boolean dbON = true;
+	private static boolean dbON = false;
 	public static User user = new User("xiaoming", "kevin@gmail.com", "123");;
-	private static String UPLOAD_LOCATION = "C:/Users/Piyush/Desktop/temp/app/";
-
+	private static String UPLOAD_LOCATION = "C:/local/";
+	DBHandler dbHandler = null;
+	FSHandler fsHandler = null;
 	// TODO: should remove when db is ready
 	public WebServerController() {
+		loadSystemProperties();
 		User kevin = new User("Kevin", "kevin@gmail.com", "123");
 		User piyush = new User("Piyush", "piyush@gmail.com", "123");
 		userMap.put(kevin.getUserEmail(), kevin);
@@ -101,7 +111,6 @@ public class WebServerController {
 		System.out.println("reaching getFileListById API for client :" + userName);
 
 		ArrayList<MyDriveFileInfo> list = new ArrayList<MyDriveFileInfo>();
-		;
 		if (dbON)
 			list = getAllFiles(user.getUserName());
 		else if (fileMap.containsKey(userName)) {
@@ -128,29 +137,95 @@ public class WebServerController {
 		return dto;
 	}
 
-	public ArrayList<MyDriveFileInfo> getAllFiles(String userName) {
-		MongoDriver driver = new MongoDriver(userName);
-		ArrayList<MyDriveFileInfo> retList = driver.search("fileDtls");
-		driver.disConnect();
+	public ArrayList<MyDriveFileInfo> getAllFiles(String userName) 
+	{	
+		System.out.println("File to be fetched for user "+userName);
+		StorageManager sm = new StorageManager(dbON, userName, UPLOAD_LOCATION);
+		ArrayList<MyDriveFileInfo> retList = null;
+		if(dbON)
+		{
+			dbHandler = sm.getDBHandler();
+			retList = dbHandler.getAllFiles(userName);
+		}
+		else
+		{
+			fsHandler = sm.getFSHandler();
+			retList = fsHandler.getAllFiles(userName);
+		}
+		
 		return retList;
 	}
-
-	public boolean deleteFile(String userName, String fileName) {
-		MongoDriver driver = new MongoDriver(userName);
-		boolean retVal = driver.deleteFile(fileName);
-		driver.disConnect();
-		if (retVal)
-			deleteFromWebService(userName, fileName);
-		return retVal;
+	
+	private boolean loadSystemProperties() 
+	{
+		boolean flag = false;
+		try 
+		{
+			File file = new File("properties/system.properties");
+			System.out.println(file.getAbsolutePath());
+			FileInputStream fis = new FileInputStream(file);
+			Properties properties = new Properties();
+			properties.load(fis);
+			fis.close();
+			Enumeration<Object> keys = properties.keys();
+			while(keys.hasMoreElements())
+			{
+				String key = (String) keys.nextElement();
+				String val = properties.getProperty(key);
+				if(key.equals("localFilePath"))
+					UPLOAD_LOCATION = val;
+				else if(key.equals("db"))
+				{
+					if(val.equalsIgnoreCase("ON"))
+						dbON = true;
+				}
+			}
+			if(UPLOAD_LOCATION==null || UPLOAD_LOCATION.equals(""))
+			{
+				System.out.println("System properties missing! Check configurations!!");
+				//_logger.error("System properties missing! Check configurations!!");
+				flag = false;
+			}
+			else
+			{
+				//checkAndCreateDirectory();
+				flag = true;
+			}
+		} 
+		catch (FileNotFoundException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+		return flag;
+		
 	}
-
-	public void deleteFromWebService(String userName, String fileName) {
-		File orgfileToDelete = new File(UPLOAD_LOCATION + fileName);
-		File zipfileToDelete = new File(UPLOAD_LOCATION + fileName + ".zip");
-
-		if (orgfileToDelete.exists())
-			orgfileToDelete.delete();
-		if (zipfileToDelete.exists())
-			zipfileToDelete.delete();
+	
+	public boolean deleteFile(String userName, String fileName)
+	{
+		System.out.println("File to be deleted is "+fileName);
+		StorageManager sm = new StorageManager(dbON, userName, UPLOAD_LOCATION);
+		try
+		{
+			if(dbON)
+			{
+				dbHandler = sm.getDBHandler();
+				dbHandler.deleteFile(userName, fileName);
+			}
+			else
+			{
+				fsHandler = sm.getFSHandler();
+				fsHandler.deleteFile(userName, fileName);
+			}
+			return true;
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
 	}
 }
