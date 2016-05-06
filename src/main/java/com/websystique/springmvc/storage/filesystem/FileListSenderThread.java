@@ -1,4 +1,4 @@
-package com.websystique.springmvc.filesystem;
+package com.websystique.springmvc.storage.filesystem;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.ObjectOutputStream;

@@ -1,4 +1,4 @@
-package com.websystique.springmvc.filesystem;
+package com.websystique.springmvc.storage.filesystem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -15,7 +15,7 @@ import com.websystique.springmvc.model.MyDriveFile;
 import com.websystique.springmvc.model.User;
 import com.websystique.springmvc.model.MyDriveFileInfo;
 import com.websystique.springmvc.model.WebAPIDTO;
-import com.websystique.springmvc.mongo.MongoDriver;
+import com.websystique.springmvc.storage.mongo.MongoDriver;
 
 @RestController
 public class WebServerController {

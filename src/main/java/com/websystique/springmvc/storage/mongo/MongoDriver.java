@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.websystique.springmvc.mongo;
+package com.websystique.springmvc.storage.mongo;
 
 import com.mongodb.DB;
 import com.mongodb.DBObject;

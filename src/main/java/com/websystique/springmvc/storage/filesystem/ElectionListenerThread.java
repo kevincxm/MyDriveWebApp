@@ -1,4 +1,4 @@
-package com.websystique.springmvc.filesystem;
+package com.websystique.springmvc.storage.filesystem;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

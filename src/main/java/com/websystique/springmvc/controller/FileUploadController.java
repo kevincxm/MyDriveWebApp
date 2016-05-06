@@ -30,7 +30,7 @@ import com.websystique.springmvc.compression.CompressionFactory;
 import com.websystique.springmvc.model.FileBucket;
 import com.websystique.springmvc.model.MultiFileBucket;
 import com.websystique.springmvc.model.MyDriveFile;
-import com.websystique.springmvc.mongo.MongoDriver;
+import com.websystique.springmvc.storage.mongo.MongoDriver;
 import com.websystique.springmvc.util.FileValidator;
 import com.websystique.springmvc.util.MultiFileValidator;
 
