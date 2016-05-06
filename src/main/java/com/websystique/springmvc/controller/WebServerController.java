@@ -40,8 +40,8 @@ public class WebServerController {
 		loadSystemProperties();
 		User kevin = new User("Kevin", "kevin@gmail.com", "123");
 		User piyush = new User("Piyush", "piyush@gmail.com", "123");
-		userMap.put(kevin.getUserEmail(), kevin);
-		userMap.put(piyush.getUserEmail(), piyush);
+		userMap.put(kevin.getUserName(), kevin);
+		userMap.put(piyush.getUserName(), piyush);
 
 		ArrayList<MyDriveFileInfo> list = null;
 		if (dbON)
@@ -60,22 +60,21 @@ public class WebServerController {
 			list.add(file4);
 		}
 
-		fileMap.put("kevin@gmail.com", list);
-		fileMap.put("piyush@gmail.com", list);
+		fileMap.put("kevin", list);
+		fileMap.put("piyush", list);
 	}
 
-	@RequestMapping(value = "/api/login/{email}/{pw}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public WebAPIDTO login(@PathVariable String email, @PathVariable String pw) throws ParseException {
+	@RequestMapping(value = "/api/login/{name}/{pw}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public WebAPIDTO login(@PathVariable String name, @PathVariable String pw) throws ParseException {
 		WebAPIDTO dto = new WebAPIDTO();
 		dto.setMethodName("login");
 		dto.setResult("bad");
 		dto.setStatusCode("404");
 		// todo: check the db instead
-		if (userMap.containsKey(email)) {
-			if (userMap.get(email).getUserPW().equals(pw)) {
+		if (userMap.containsKey(name)) {
+			if (userMap.get(name).getUserPW().equals(pw)) {
 				dto.setStatusCode("200");
 				dto.setResult("good");
-				user = new User("kevin", email, pw);
 			}
 		}
 		return dto;
@@ -93,12 +92,12 @@ public class WebServerController {
 				|| memberPassword.isEmpty() || memberPassword == null) {
 			dto.setStatusCode("400");
 		} else {
-			if (userMap.containsKey(memberEmail)) {
+			if (userMap.containsKey(memberName)) {
 				dto.setStatusCode("400");
 				dto.setResult("user exists!");
 			} else {
 				User user = new User(memberName, memberEmail, memberPassword);
-				userMap.put(memberEmail, user);
+				userMap.put(memberName, user);
 				dto.setStatusCode("200");
 				dto.setResult("good");
 			}
