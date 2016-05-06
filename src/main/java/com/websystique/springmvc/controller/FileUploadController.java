@@ -130,7 +130,7 @@ public class FileUploadController {
 			System.out.println("Fetching file");
 			MultipartFile multipartFile = fileBucket.getFile();
 			// Now do something with file...
-			File file = new File("C:/Users/Piyush/Desktop/temp/app/"+fileBucket.getFile().getOriginalFilename());
+			File file = new File(UPLOAD_LOCATION+fileBucket.getFile().getOriginalFilename());
 			multipartFile.transferTo(file);
 			compressAndPush(file, multipartFile.getContentType(), userName);
 			//FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File( UPLOAD_LOCATION + fileBucket.getFile().getOriginalFilename()));

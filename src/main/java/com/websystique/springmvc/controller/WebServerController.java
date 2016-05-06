@@ -31,21 +31,24 @@ public class WebServerController {
 	private HashMap<String, User> userMap = new HashMap<String, User>();
 	private HashMap<String, ArrayList<MyDriveFileInfo>> fileMap = new HashMap<String, ArrayList<MyDriveFileInfo>>();
 	private static boolean dbON = false;
-	public static User user = new User("xiaoming", "kevin@gmail.com", "123");;
 	private static String UPLOAD_LOCATION = "C:/local/";
 	DBHandler dbHandler = null;
 	FSHandler fsHandler = null;
 	// TODO: should remove when db is ready
 	public WebServerController() {
 		loadSystemProperties();
-		User kevin = new User("Kevin", "kevin@gmail.com", "123");
-		User piyush = new User("Piyush", "piyush@gmail.com", "123");
+		User kevin = new User("kevin", "kevin@gmail.com", "123");
+		User piyush = new User("piyush", "piyush@gmail.com", "123");
 		userMap.put(kevin.getUserName(), kevin);
 		userMap.put(piyush.getUserName(), piyush);
-
+	}
+	
+	public void fileInit(String name){
 		ArrayList<MyDriveFileInfo> list = null;
-		if (dbON)
-			list = getAllFiles(user.getUserName());
+		if (dbON){
+			list = getAllFiles(name);
+			fileMap.put(name,list);
+		}
 		else {
 			list = new ArrayList<MyDriveFileInfo>();
 			MyDriveFileInfo file = new MyDriveFileInfo("i_mark_bold5.png", "png", 1024);
@@ -58,12 +61,12 @@ public class WebServerController {
 			list.add(file3);
 			MyDriveFileInfo file4 = new MyDriveFileInfo("Hero", "image", 1024 * 20);
 			list.add(file4);
+			fileMap.put("kevin", list);
+			fileMap.put("piyush", list);
 		}
-
-		fileMap.put("kevin", list);
-		fileMap.put("piyush", list);
+		
 	}
-
+	
 	@RequestMapping(value = "/api/login/{name}/{pw}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public WebAPIDTO login(@PathVariable String name, @PathVariable String pw) throws ParseException {
 		WebAPIDTO dto = new WebAPIDTO();
@@ -75,6 +78,7 @@ public class WebServerController {
 			if (userMap.get(name).getUserPW().equals(pw)) {
 				dto.setStatusCode("200");
 				dto.setResult("good");
+				fileInit(name);
 			}
 		}
 		return dto;
@@ -111,7 +115,7 @@ public class WebServerController {
 
 		ArrayList<MyDriveFileInfo> list = new ArrayList<MyDriveFileInfo>();
 		if (dbON)
-			list = getAllFiles(user.getUserName());
+			list = getAllFiles(userName);
 		else if (fileMap.containsKey(userName)) {
 			list = fileMap.get(userName);
 		}
