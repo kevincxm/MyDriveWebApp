@@ -69,7 +69,8 @@ public class FileUploadController {
 	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
 	public String getHomePage(ModelMap model) {
 		System.out.println("reaching the endpoint");
-		return "welcome";
+		//return "welcome";
+		return "login";
 	}
 	
 	@RequestMapping(value =  "/login", method = RequestMethod.GET)
