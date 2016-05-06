@@ -4,6 +4,7 @@
 package com.websystique.springmvc.mongo;
 
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.DBCollection;
 import com.mongodb.BasicDBObject;
@@ -139,6 +140,18 @@ public class MongoDriver {
         gridFSInsert(file.getFile());
 	}
 	
+	public boolean deleteFile(String fileName)
+	{
+		DBCollection coll = db.getCollection("fileDtls");
+        System.out.println("Collection fileDtls selected successfully for deleting file : "+fileName);
+        BasicDBObject doc = new BasicDBObject();
+        doc.append("fileName", fileName);
+        DBObject myDoc = coll.findOne(doc);
+        coll.remove(myDoc);
+        gridFSDeleteFile(fileName+".zip");
+		return true;
+	}
+	
 	public ArrayList<MyDriveFileInfo> search(String collectionName)
 	{
 		DBCollection coll = this.db.getCollection(collectionName/*"players"*/);
@@ -206,16 +219,16 @@ public class MongoDriver {
 		System.out.println(imageForOutput);
 	}
 	
-	public void gridFSDownload(String fileName) throws IOException
+	public void gridFSDownload(String fileName, String uploadLocation) throws IOException
 	{
 		String newFileName = fileName;
 		GridFS gfsPhoto = new GridFS(db, "fs");
-		GridFSDBFile imageForOutput = gfsPhoto.findOne(newFileName);
+		GridFSDBFile gridFile = gfsPhoto.findOne(newFileName);
 		//imageForOutput.writeTo("/"); //output to the web servers
-		imageForOutput.writeTo(new File(fileName));
+		gridFile.writeTo(new File(uploadLocation+fileName));
 	}
 	
-	public void gridFSDeleteFileExample(String fileName)
+	public void gridFSDeleteFile(String fileName)
 	{
 		String newFileName = fileName;
 		GridFS gfsPhoto = new GridFS(db, "fs");

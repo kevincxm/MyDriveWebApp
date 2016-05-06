@@ -1,5 +1,6 @@
 package com.websystique.springmvc.controller;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class WebServerController {
 	private HashMap<String, ArrayList<MyDriveFileInfo>> fileMap = new HashMap<String, ArrayList<MyDriveFileInfo>>();
 	private static boolean dbON = true;
 	public static User user = new User("xiaoming", "kevin@gmail.com","123");;
-	
+	private static String UPLOAD_LOCATION="C:/Users/Piyush/Desktop/temp/app/";
 	
 	// TODO: should remove when db is ready
 	public WebServerController(){
@@ -120,9 +121,10 @@ public class WebServerController {
 		WebAPIDTO dto = new WebAPIDTO();
 		dto.setMethodName("deleteFile");
 		dto.setResult("bad");
-		//dto.setStatusCode("400");
-		//For piyshu, add the db logic here, if success, use following two lines.
-		//dto.setResult("good");
+		dto.setStatusCode("400");
+		//For piyush, add the db logic here, if success, use following two lines.
+		if(deleteFile(userName, fileName))
+			dto.setResult("good");
 		dto.setStatusCode("200");
 		
 		return dto;
@@ -135,6 +137,27 @@ public class WebServerController {
 		ArrayList<MyDriveFileInfo> retList = driver.search("fileDtls");
 		driver.disConnect();
 		return retList;
+	}
+	
+	public boolean deleteFile(String userName, String fileName)
+	{
+		MongoDriver driver = new MongoDriver(userName);
+		boolean retVal = driver.deleteFile(fileName);
+		driver.disConnect();
+		if(retVal)
+			deleteFromWebService(userName, fileName);
+		return retVal;
+	}
+	
+	public void deleteFromWebService(String userName, String fileName)
+	{
+		File orgfileToDelete = new File(UPLOAD_LOCATION+fileName);
+		File zipfileToDelete = new File(UPLOAD_LOCATION+fileName+".zip");
+		
+		if(orgfileToDelete.exists())
+			orgfileToDelete.delete();
+		if(zipfileToDelete.exists())
+			zipfileToDelete.delete();
 	}
 }
 
