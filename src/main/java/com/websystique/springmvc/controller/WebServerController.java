@@ -20,77 +20,73 @@ import com.websystique.springmvc.mongo.MongoDriver;
 @RestController
 public class WebServerController {
 
-	private HashMap<String, User> userMap = new HashMap<String, User>();	
+	private HashMap<String, User> userMap = new HashMap<String, User>();
 	private HashMap<String, ArrayList<MyDriveFileInfo>> fileMap = new HashMap<String, ArrayList<MyDriveFileInfo>>();
 	private static boolean dbON = true;
-	public static User user = new User("xiaoming", "kevin@gmail.com","123");;
-	private static String UPLOAD_LOCATION="C:/Users/Piyush/Desktop/temp/app/";
-	
+	public static User user = new User("xiaoming", "kevin@gmail.com", "123");;
+	private static String UPLOAD_LOCATION = "C:/Users/Piyush/Desktop/temp/app/";
+
 	// TODO: should remove when db is ready
-	public WebServerController(){
-		User kevin = new User("Kevin", "kevin@gmail.com","123");
-		User piyush = new User("Piyush", "piyush@gmail.com","123");
-		userMap.put(kevin.getUserEmail(),kevin);
+	public WebServerController() {
+		User kevin = new User("Kevin", "kevin@gmail.com", "123");
+		User piyush = new User("Piyush", "piyush@gmail.com", "123");
+		userMap.put(kevin.getUserEmail(), kevin);
 		userMap.put(piyush.getUserEmail(), piyush);
-		
+
 		ArrayList<MyDriveFileInfo> list = null;
-		if(dbON)
+		if (dbON)
 			list = getAllFiles(user.getUserName());
-		else
-		{
+		else {
 			list = new ArrayList<MyDriveFileInfo>();
-			MyDriveFileInfo file = new MyDriveFileInfo("mp1","pdf",1024);
+			MyDriveFileInfo file = new MyDriveFileInfo("i_mark_bold5.png", "png", 1024);
 			list.add(file);
-			MyDriveFileInfo file1 = new MyDriveFileInfo("mp2","txt",8024);
+			MyDriveFileInfo file1 = new MyDriveFileInfo("mp2", "txt", 8024);
 			list.add(file1);
-			MyDriveFileInfo file2 = new MyDriveFileInfo("music","mp3",1024*6);
+			MyDriveFileInfo file2 = new MyDriveFileInfo("music", "mp3", 1024 * 6);
 			list.add(file2);
-			MyDriveFileInfo file3 = new MyDriveFileInfo("newspaper","doc",7024);
+			MyDriveFileInfo file3 = new MyDriveFileInfo("newspaper", "doc", 7024);
 			list.add(file3);
-			MyDriveFileInfo file4 = new MyDriveFileInfo("Hero","image",1024*20);
+			MyDriveFileInfo file4 = new MyDriveFileInfo("Hero", "image", 1024 * 20);
 			list.add(file4);
 		}
-		
+
 		fileMap.put("kevin@gmail.com", list);
-		fileMap.put("piyush@gmail.com", list);	
+		fileMap.put("piyush@gmail.com", list);
 	}
-	
-	@RequestMapping(value="/api/login/{email}/{pw}",method = RequestMethod.GET,headers="Accept=application/json")
-	public WebAPIDTO login(@PathVariable String email ,@PathVariable String pw) throws ParseException 
-	{ 
+
+	@RequestMapping(value = "/api/login/{email}/{pw}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public WebAPIDTO login(@PathVariable String email, @PathVariable String pw) throws ParseException {
 		WebAPIDTO dto = new WebAPIDTO();
 		dto.setMethodName("login");
-		dto.setResult("bad");	
+		dto.setResult("bad");
 		dto.setStatusCode("404");
 		// todo: check the db instead
-		if(userMap.containsKey(email)){
-			if(userMap.get(email).getUserPW().equals(pw)){
+		if (userMap.containsKey(email)) {
+			if (userMap.get(email).getUserPW().equals(pw)) {
 				dto.setStatusCode("200");
 				dto.setResult("good");
-				user = new User("kevin",email, pw);
+				user = new User("kevin", email, pw);
 			}
 		}
 		return dto;
-	  }
+	}
 
-	@RequestMapping(value="/api/createmember/{memberName}/{memberEmail}/{memberPassword}",method = RequestMethod.POST,headers="Accept=application/json")
-	public WebAPIDTO addMember(@PathVariable String memberName,@PathVariable String memberEmail,@PathVariable String memberPassword) throws ParseException 
-	{ 
-		System.out.println("reaching addMember API for client :" +memberEmail);
-	  	WebAPIDTO dto = new WebAPIDTO();
-	  	dto.setMethodName("addMember");
-	  	dto.setResult("bad");
-	
-		if(memberName.isEmpty()|| memberName ==null || memberEmail.isEmpty() ||memberEmail ==null || memberPassword.isEmpty() || memberPassword ==null)			
-		{
+	@RequestMapping(value = "/api/createmember/{memberName}/{memberEmail}/{memberPassword}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public WebAPIDTO addMember(@PathVariable String memberName, @PathVariable String memberEmail,
+			@PathVariable String memberPassword) throws ParseException {
+		System.out.println("reaching addMember API for client :" + memberEmail);
+		WebAPIDTO dto = new WebAPIDTO();
+		dto.setMethodName("addMember");
+		dto.setResult("bad");
+
+		if (memberName.isEmpty() || memberName == null || memberEmail.isEmpty() || memberEmail == null
+				|| memberPassword.isEmpty() || memberPassword == null) {
 			dto.setStatusCode("400");
-		}
-		else{
-			if(userMap.containsKey(memberEmail)){
+		} else {
+			if (userMap.containsKey(memberEmail)) {
 				dto.setStatusCode("400");
 				dto.setResult("user exists!");
-			}
-			else{
+			} else {
 				User user = new User(memberName, memberEmail, memberPassword);
 				userMap.put(memberEmail, user);
 				dto.setStatusCode("200");
@@ -98,69 +94,63 @@ public class WebServerController {
 			}
 		}
 		return dto;
-	  }      
-	@RequestMapping(value="/api/getFileListById/{userName}/",method = RequestMethod.POST,headers="Accept=application/json")
-	public ArrayList<MyDriveFileInfo> getFileListById(@PathVariable String userName) throws ParseException 
-	{ 
-		System.out.println("reaching getFileListById API for client :" +userName);
-		
-		ArrayList<MyDriveFileInfo> list = new ArrayList<MyDriveFileInfo>();;
-		if(dbON)
+	}
+
+	@RequestMapping(value = "/api/getFileListById/{userName}/", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ArrayList<MyDriveFileInfo> getFileListById(@PathVariable String userName) throws ParseException {
+		System.out.println("reaching getFileListById API for client :" + userName);
+
+		ArrayList<MyDriveFileInfo> list = new ArrayList<MyDriveFileInfo>();
+		;
+		if (dbON)
 			list = getAllFiles(user.getUserName());
-		else if(fileMap.containsKey(userName))
-		{
+		else if (fileMap.containsKey(userName)) {
 			list = fileMap.get(userName);
 		}
 		return list;
-	}   
-	
-	@RequestMapping(value="/api/deleteFile/{userName}/{fileName}/",method = RequestMethod.POST,headers="Accept=application/json")
-	public WebAPIDTO deleteFileByName(@PathVariable String userName, @PathVariable String fileName) throws ParseException 
-	{ 
-		System.out.println("reaching deleteFileByName API for client :" +userName +"and try to delete the file: "+ fileName);
+	}
+
+	@RequestMapping(value = "/api/deleteFile/{userName}/{fileName}/", method = RequestMethod.POST, headers = "Accept=application/json")
+	public WebAPIDTO deleteFileByName(@PathVariable String userName, @PathVariable String fileName)
+			throws ParseException {
+		System.out.println(
+				"reaching deleteFileByName API for client :" + userName + "and try to delete the file: " + fileName);
 		WebAPIDTO dto = new WebAPIDTO();
 		dto.setMethodName("deleteFile");
 		dto.setResult("bad");
 		dto.setStatusCode("400");
-		//For piyush, add the db logic here, if success, use following two lines.
-		if(deleteFile(userName, fileName))
+		// For piyush, add the db logic here, if success, use following two
+		// lines.
+		if (deleteFile(userName, fileName))
 			dto.setResult("good");
 		dto.setStatusCode("200");
-		
+
 		return dto;
 	}
-	
-	
-	public ArrayList<MyDriveFileInfo> getAllFiles(String userName)
-	{
+
+	public ArrayList<MyDriveFileInfo> getAllFiles(String userName) {
 		MongoDriver driver = new MongoDriver(userName);
 		ArrayList<MyDriveFileInfo> retList = driver.search("fileDtls");
 		driver.disConnect();
 		return retList;
 	}
-	
-	public boolean deleteFile(String userName, String fileName)
-	{
+
+	public boolean deleteFile(String userName, String fileName) {
 		MongoDriver driver = new MongoDriver(userName);
 		boolean retVal = driver.deleteFile(fileName);
 		driver.disConnect();
-		if(retVal)
+		if (retVal)
 			deleteFromWebService(userName, fileName);
 		return retVal;
 	}
-	
-	public void deleteFromWebService(String userName, String fileName)
-	{
-		File orgfileToDelete = new File(UPLOAD_LOCATION+fileName);
-		File zipfileToDelete = new File(UPLOAD_LOCATION+fileName+".zip");
-		
-		if(orgfileToDelete.exists())
+
+	public void deleteFromWebService(String userName, String fileName) {
+		File orgfileToDelete = new File(UPLOAD_LOCATION + fileName);
+		File zipfileToDelete = new File(UPLOAD_LOCATION + fileName + ".zip");
+
+		if (orgfileToDelete.exists())
 			orgfileToDelete.delete();
-		if(zipfileToDelete.exists())
+		if (zipfileToDelete.exists())
 			zipfileToDelete.delete();
 	}
 }
-
-
-
-

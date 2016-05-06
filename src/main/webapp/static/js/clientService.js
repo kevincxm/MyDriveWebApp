@@ -94,14 +94,16 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
 	   console.log("Page loaded!!");
 	   //var name = userLogin.getUser();
 	   //console.log('userName:'+name);
-	  $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
-	   //$scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/xiaoming/";
+	  //$scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/kevin@gmail.com/";
+	   $scope.urlGetFileList = "http://localhost:8080/mydrive/api/getFileListById/xiaoming/";
 		$http.post($scope.urlGetFileList)
 		    .success(function (response) {$scope.FileList = response;});
 	};
 	
 	$scope.download = function (file) {
 	     console.log("download the file:"+file.fileName);
+	     var downloadUrl = 'http://localhost:8080/mydrive/download/'+file.fileName+'/';
+	     window.open(downloadUrl, '_blank', '');  
 	};
 	
 	$scope.deleteFile = function(file){
