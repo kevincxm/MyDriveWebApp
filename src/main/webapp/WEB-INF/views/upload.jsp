@@ -95,12 +95,12 @@ body {
 		</div>
 		</br>
 		 <div class="row">
-		 <div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
+	<!-- 	 <div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
 		    <input class="btn btn-primary col-sm-6" type="file" file-model="myFile"/>
 		    <button class="btn btn-primary glyphicon glyphicon-cloud-upload col-sm-2 col-sm-offset-1" ng-click="uploadFile()"></button>
-		</div>
+		</div> -->
 		<div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
-			<button class="btn btn-primary col-sm-4" ng-click="uploadLargeFile()">Upload Large File</button>
+			<button class="btn btn-primary btn-lg glyphicon glyphicon-cloud-upload col-sm-12" ng-click="uploadLargeFile()"> Upload the File</button>
 		</div>
 		</br>
 		
