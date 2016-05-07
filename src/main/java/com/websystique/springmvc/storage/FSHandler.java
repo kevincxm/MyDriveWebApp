@@ -3,7 +3,11 @@
  */
 package com.websystique.springmvc.storage;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -59,7 +63,8 @@ public class FSHandler {
 	
 	public void writeFileDts(String user, File file, String fileType)
 	{
-		StringBuffer fileDtl = new StringBuffer(file.getName()).append("::").append(file.length()).append("::").append(fileType);
+		StringBuffer fileDtl = new StringBuffer("OK::");
+		fileDtl.append(file.getName()).append("::").append(file.length()).append("::").append(fileType);
 		List<String> lines = Arrays.asList(fileDtl.toString());
 		Path pathfile = Paths.get(user+".txt");
 		try 
@@ -76,9 +81,57 @@ public class FSHandler {
 		}
 	}
 
-	public void deleteFile(String userName, String fileName) {
-		// TODO Auto-generated method stub
+	public void deleteFile(String userName, String fileName) 
+	{
+		File file = new File(UPLOAD_LOCATION+fileName);
+		if(file!=null && file.exists())
+			file.delete();
+		file = new File(UPLOAD_LOCATION+fileName+".zip");
+		if(file!=null && file.exists())
+			file.delete();
 		
+		editUserFileDtlFiles(userName, fileName);
+	}
+	
+	public void editUserFileDtlFiles(String userName, String fileName)
+	{
+	     String oldFileName = userName+".txt";
+	     String tmpFileName = userName+"_tmp.txt";
+
+	      BufferedReader br = null;
+	      BufferedWriter bw = null;
+	      try {
+	         br = new BufferedReader(new FileReader(oldFileName));
+	         bw = new BufferedWriter(new FileWriter(tmpFileName));
+	         String line;
+	         while ((line = br.readLine()) != null) {
+	            if (!line.startsWith("OK::"+fileName))
+	            	bw.write(line+"\n");
+	            
+	         }
+	      } catch (Exception e) {
+	         return;
+	      } finally {
+	         try {
+	            if(br != null)
+	               br.close();
+	         } catch (IOException e) {
+	            //
+	         }
+	         try {
+	            if(bw != null)
+	               bw.close();
+	         } catch (IOException e) {
+	            //
+	         }
+	      }
+	      // Once everything is complete, delete old file..
+	      File oldFile = new File(oldFileName);
+	      oldFile.delete();
+
+	      // And rename tmp file's name to old file name
+	      File newFile = new File(tmpFileName);
+	      newFile.renameTo(oldFile);
 	}
 
 	public ArrayList<MyDriveFileInfo> getAllFiles(String userName) {
@@ -86,15 +139,19 @@ public class FSHandler {
 		try {
 			for (String line : Files.readAllLines(Paths.get(userName+".txt"))) 
 			{
-				MyDriveFileInfo mdInfo = new MyDriveFileInfo();
+				
 			    String[] texts = line.split("::");
-			    try{ mdInfo.setFileName(texts[0]);} catch(NullPointerException nle){}
-		           try{ mdInfo.setFileType(texts[2]);} catch(NullPointerException nle){}
-		           try{ mdInfo.setFileSize(Integer.valueOf(texts[1]));} catch(NullPointerException nle){}
-		           /*try{ mdInfo.setCompressedFileSize(obj.getLong("compressedSize"));} catch(NullPointerException nle){}
-		           try{ mdInfo.setCreatedDate(obj.getDate("createdDate"));} catch(NullPointerException nle){}*/
-		           
-		           list.add(mdInfo);
+			    if(texts[0].equals("OK"))
+			    {
+			    	MyDriveFileInfo mdInfo = new MyDriveFileInfo();
+			    	try{ mdInfo.setFileName(texts[1]);} catch(NullPointerException nle){}
+			    	try{ mdInfo.setFileType(texts[3]);} catch(NullPointerException nle){}
+			    	try{ mdInfo.setFileSize(Integer.valueOf(texts[2]));} catch(NullPointerException nle){}
+			    	//try{ mdInfo.setCompressedFileSize(obj.getLong("compressedSize"));} catch(NullPointerException nle){}
+		            //try{ mdInfo.setCreatedDate(obj.getDate("createdDate"));} catch(NullPointerException nle){}
+
+			    	list.add(mdInfo);
+			    }
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

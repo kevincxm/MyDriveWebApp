@@ -118,7 +118,7 @@ public class WebServerController {
 		if (dbON)
 			list = getAllFiles(userName);
 		else if (fileMap.containsKey(userName)) {
-			list = fileMap.get(userName);
+			list = getAllFiles(userName);
 		}
 		return list;
 	}
