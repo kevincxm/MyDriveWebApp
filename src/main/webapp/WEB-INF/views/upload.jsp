@@ -122,8 +122,8 @@ body {
 		            <td><b>Type</b></td>
 		            <td><b>Action</b></td>
 		          </tr>
-		          <tr class="event-checkIn-tb-black" ng-repeat="a in FileList | filter:searchText">
-		            <td><i class="glyphicon glyphicon-file" style="color:#337AB7;"><p>{{a.fileName}}</p></td>
+		          <tr class="event-checkIn-tb-black " ng-repeat="a in FileList | filter:searchText">
+		            <td><i class="glyphicon glyphicon-inbox"><p  style="color:#337AB7;">{{a.fileName}}</p></td>
 		            <td><p>{{a.fileSize}}</p></td>
 		            <td><p>{{a.fileType}}</p></td>
 		            <td class = "event-checkIn-tb-td">

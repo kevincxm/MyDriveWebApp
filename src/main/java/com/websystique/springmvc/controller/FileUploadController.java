@@ -38,7 +38,7 @@ import com.websystique.springmvc.util.MultiFileValidator;
 
 @Controller
 public class FileUploadController {
-	private static boolean dbON = false;
+	private static boolean dbON = true;
 	public FileUploadController(){
 		loadSystemProperties();
 	}

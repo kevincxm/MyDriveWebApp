@@ -30,7 +30,7 @@ public class WebServerController {
 
 	private HashMap<String, User> userMap = new HashMap<String, User>();
 	private HashMap<String, ArrayList<MyDriveFileInfo>> fileMap = new HashMap<String, ArrayList<MyDriveFileInfo>>();
-	private static boolean dbON = false;
+	private static boolean dbON = true;
 	private static String UPLOAD_LOCATION = "C:/local/";
 	DBHandler dbHandler = null;
 	FSHandler fsHandler = null;
