@@ -50,7 +50,8 @@ public class WebServerController {
 			fileMap.put(name,list);
 		}
 		else {
-			list = new ArrayList<MyDriveFileInfo>();
+			list = getAllFiles(name);
+			/*list = new ArrayList<MyDriveFileInfo>();
 			MyDriveFileInfo file = new MyDriveFileInfo("i_mark_bold5.png", "png", 1024);
 			list.add(file);
 			MyDriveFileInfo file1 = new MyDriveFileInfo("mp2", "txt", 8024);
@@ -61,8 +62,8 @@ public class WebServerController {
 			list.add(file3);
 			MyDriveFileInfo file4 = new MyDriveFileInfo("Hero", "image", 1024 * 20);
 			list.add(file4);
-			fileMap.put("kevin", list);
-			fileMap.put("piyush", list);
+			fileMap.put("kevin", list);*/
+			fileMap.put(name, list);
 		}
 		
 	}

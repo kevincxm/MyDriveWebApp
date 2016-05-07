@@ -15,41 +15,50 @@ public class MyDriveFSManager {
 	 * @param args
 	 */
 	private static Node node;
+	private static MyDriveFSManager mdfsManagerInstance;
 	
-	public MyDriveFSManager()
+	protected MyDriveFSManager(String user) 
 	{
-		node = new Node("xiaoming");
+	      // Exists only to defeat instantiation.
+		setNode(new Node(user));
 	}
 	
-	public MyDriveFSManager(String user)
+	public static MyDriveFSManager getInstance(String user) 
 	{
-		node = new Node(user);
-	}
-	
-	public static void main(String[] args) 
-	{
-		node = new Node("xiaoming");
-		node.begin();
-	}
+	      if(mdfsManagerInstance == null) {
+	    	  mdfsManagerInstance = new MyDriveFSManager(user);
+	    	  mdfsManagerInstance.setNode(node);
+	    	  node.begin();
+	      }
+	      return mdfsManagerInstance;
+	   }
 	
 	public void putFile(String file, String userName)
 	{
-		node.putFile(file);
+		getNode().putFile(file);
 	}
 	
 	public List<String> getFileList(String userName)
 	{
-		return node.getAllFiles(userName);
+		return getNode().getAllFiles(userName);
 	}
 	
 	public void downloadFile(String userName, String fileName)
 	{
-		node.getFile(fileName);
+		getNode().getFile(fileName);
 	}
 	
 	public void deleteFile(String userName, String fileName)
 	{
-		node.deleteFile(fileName);
+		getNode().deleteFile(fileName);
+	}
+
+	public static Node getNode() {
+		return node;
+	}
+
+	public void setNode(Node node) {
+		MyDriveFSManager.node = node;
 	}
 
 }

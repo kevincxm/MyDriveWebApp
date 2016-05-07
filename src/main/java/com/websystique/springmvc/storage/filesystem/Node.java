@@ -227,7 +227,7 @@ public class Node
 			loadSystemProperties();
 			_machineIp = InetAddress.getLocalHost().getHostAddress().toString();
 			
-			boolean flag = true;
+			/*boolean flag = true;
 			while(flag)
 			{
 				System.out.println("\tWelcome to the MyDrive Inc!");
@@ -251,10 +251,10 @@ public class Node
 					System.out.println("\tWe are sorry. That option was invalid. Pls try again!!!!");
 					return;
 				}
-			}
+			}*/
 			initDaemonThreads();
 			
-			flag = true;
+			/*flag = true;
 			while(flag)
 			{
 				System.out.println("\nHere are your options: ");
@@ -451,7 +451,7 @@ public class Node
 							+delim+temp.getHeartBeat()+""
 							+delim+temp.isActive());
 				}
-			}
+			}*/
 		} 
 		catch (UnknownHostException e) 
 		{
@@ -461,11 +461,11 @@ public class Node
 		{
 			_logger.error(e);
 			//e.printStackTrace();
-		} catch (InterruptedException e) 
+		} /*catch (InterruptedException e) 
 		{
 			_logger.error(e);
 			//e.printStackTrace();
-		}
+		}*/
 		finally
 		{
 			System.out.println("Good Bye!");

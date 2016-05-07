@@ -23,7 +23,7 @@ public class StorageManager {
 		if(db && dbHandler==null)
 			dbHandler = new DBHandler(user, location);
 		else if(!db && fsHandler==null)
-			fsHandler = new FSHandler();
+			fsHandler = new FSHandler(user, location);
 	}
 	public boolean isDb() {
 		return dbON;
