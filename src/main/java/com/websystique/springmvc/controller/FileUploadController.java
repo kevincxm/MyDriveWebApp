@@ -85,7 +85,7 @@ public class FileUploadController {
 	public String getUpload(ModelMap model) {
 		return "upload";
 	}
-	@RequestMapping(value = "/singleUpload", method = RequestMethod.GET)
+	@RequestMapping(value = "/singleUpload/{userName}", method = RequestMethod.GET)
 	public String getSingleUploadPage(ModelMap model) {
 		FileBucket fileModel = new FileBucket();
 		model.addAttribute("fileBucket", fileModel);
@@ -141,6 +141,25 @@ public class FileUploadController {
 			return "success";
 		}
 	}
+	
+	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
+    public String singleFileUpload(@Valid FileBucket fileBucket,
+            BindingResult result, ModelMap model) throws IOException {
+ 
+        if (result.hasErrors()) {
+            System.out.println("validation errors");
+            return "singleFileUploader";
+        } else {
+            System.out.println("Fetching file");
+            MultipartFile multipartFile = fileBucket.getFile();
+ 
+            // Now do something with file...
+            FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File( UPLOAD_LOCATION + fileBucket.getFile().getOriginalFilename()));
+            String fileName = multipartFile.getOriginalFilename();
+            model.addAttribute("fileName", fileName);
+            return "success";
+        }
+    }
 	
 	public void compressAndPush(File file, String fileType, String userName)
 	{

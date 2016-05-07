@@ -9,15 +9,14 @@
 	<link href="<c:url value='/static/css/bootstrap.css' />"  rel="stylesheet" type="text/css"></link>
 	<link href="<c:url value='/static/css/app.css' />" rel="stylesheet" type="text/css"></link>
 </head>
-<body> 
+<body style="background-color:#286090;"> 
 
-	<div class="form-container">
-		<h1>Spring 4 MVC File Upload Example </h1>
+	<div class="form-container" style="background-color:#EBEDEF;">
+		<h1>MyDrive Large File Upload</h1>
 		<form:form method="POST" modelAttribute="fileBucket" enctype="multipart/form-data" class="form-horizontal">
 		
 			<div class="row">
 				<div class="form-group col-md-12">
-					<label class="col-md-3 control-lable" for="file">Upload a file</label>
 					<div class="col-md-7">
 						<form:input type="file" path="file" id="file" class="form-control input-sm"/>
 						<div class="has-error">
@@ -33,7 +32,7 @@
 				</div>
 			</div>
 		</form:form>
-		<a href="<c:url value='/welcome' />">Home</a>
+		<a href="<c:url value='/upload' />">Back</a>
 	</div>
 </body>
 </html>

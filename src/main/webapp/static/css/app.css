@@ -1,7 +1,7 @@
 body, #mainWrapper {
 	height: 100%;
 	padding:40px;
-	background-color: #EFEFEF;	
+	background-color: #EBEDEF;	
 }
 
 body, #mainWrapper, .form-control{
@@ -22,7 +22,7 @@ body, #mainWrapper, .form-control{
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 20px;
-  background-color: #E8E1E1;
+  background-color: #286090;
   border: 1px solid #ddd;
   border-radius: 4px;
 }

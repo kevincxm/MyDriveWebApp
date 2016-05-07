@@ -7,11 +7,11 @@
 	<link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
 	<link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
 </head>
-<body>
-	<div class="success">
+<body style="background-color:#286090;">
+	<div class="success" style="background-color:#EBEDEF;">
 		File  <strong>${fileName}</strong> uploaded successfully.
 		<br/><br/>
-		<a href="<c:url value='/welcome' />">Home</a>	
+		<a href="<c:url value='/upload' />">Back</a>	
 	</div>
 </body>
 </html>

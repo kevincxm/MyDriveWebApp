@@ -97,7 +97,10 @@ body {
 		 <div class="row">
 		 <div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
 		    <input class="btn btn-primary col-sm-6" type="file" file-model="myFile"/>
-		    <button class="btn btn-primary glyphicon glyphicon-cloud-upload col-sm-2 col-sm-offset-2" ng-click="uploadFile()"></button>
+		    <button class="btn btn-primary glyphicon glyphicon-cloud-upload col-sm-2 col-sm-offset-1" ng-click="uploadFile()"></button>
+		</div>
+		<div class="col-xs-10 col-sm-6 col-md-4 col-xs-offset-1 col-sm-offset-3 col-md-offset-4 input-group">
+			<button class="btn btn-primary col-sm-4" ng-click="uploadLargeFile()">Upload Large File</button>
 		</div>
 		</br>
 		

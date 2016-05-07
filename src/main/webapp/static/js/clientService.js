@@ -141,6 +141,12 @@ myapp.controller('myCtrl', ['$scope', '$http', 'fileUpload', function($scope, $h
         window.location.reload();
     };
     
+    $scope.uploadLargeFile = function(){
+    	var userName = $scope.userName;
+    	var url = "http://localhost:8080/mydrive/singleUpload/"+userName+"/";
+    	window.location.replace(url);
+    };
+    
 }]);
 
 
